@@ -21,7 +21,6 @@ public class Role {
     public Role() {
     }
 
-
     public Set<UserRole> getUserRoles() {
         return userRoles;
     }

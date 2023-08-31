@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/user")
 @CrossOrigin("*")
 public class UserController {
 
@@ -25,7 +25,7 @@ public class UserController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     //creating user
-    @PostMapping("/register")
+    @PostMapping("/")
     public User createUser(@RequestBody User user) throws Exception {
         user.setProfile("default.png");
         user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
