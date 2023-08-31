@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/auth")
 @CrossOrigin("*")
 public class UserController {
 
@@ -25,13 +25,9 @@ public class UserController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     //creating user
-    @PostMapping("/")
+    @PostMapping("/register")
     public User createUser(@RequestBody User user) throws Exception {
-
-
         user.setProfile("default.png");
-        //encoding password with bcryptpasswordencoder
-
         user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
 
         Set<UserRole> roles = new HashSet<>();
@@ -45,10 +41,7 @@ public class UserController {
         userRole.setRole(role);
 
         roles.add(userRole);
-
-
         return this.userService.createUser(user, roles);
-
     }
 
     @GetMapping("/{username}")
@@ -61,10 +54,6 @@ public class UserController {
     public void deleteUser(@PathVariable("userId") Long userId) {
         this.userService.deleteUser(userId);
     }
-
-
-    //update api
-
 
     @ExceptionHandler(UserFoundException.class)
     public ResponseEntity<?> exceptionHandler(UserFoundException ex) {
