@@ -37,15 +37,14 @@ public class AuthApplication implements CommandLineRunner {
 
 
             System.out.println("starting code");
-//
             User user = new User();
-//
-//            user.setFirstName("Tanmay");
-//            user.setLastName("Singh");
-//            user.setUsername("tanmaysinghx");
-//            user.setPassword(this.bCryptPasswordEncoder.encode("Tanmay@1999"));
-//            user.setEmail("tanmaysinghx@gmail.com");
-//            user.setProfile("default.png");
+
+            user.setFirstName("Tanmay");
+            user.setLastName("Singh");
+            user.setUsername("tanmaysinghx");
+            user.setPassword(this.bCryptPasswordEncoder.encode("Tanmay@1999"));
+            user.setEmail("tanmaysinghx@gmail.com");
+            user.setProfile("default.png");
 
             Role role1 = new Role();
             role1.setRoleId(44L);
