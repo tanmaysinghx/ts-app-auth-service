@@ -24,10 +24,8 @@ public class AuthApplication implements CommandLineRunner {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public static void main(String[] args) {
-
-
+    	
         SpringApplication.run(AuthApplication.class, args);
-
 
     }
 

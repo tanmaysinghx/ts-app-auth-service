@@ -5,6 +5,7 @@ import com.auth.helper.UserNotFoundException;
 import com.auth.model.JwtRequest;
 import com.auth.model.JwtResponse;
 import com.auth.model.User;
+import com.auth.service.UserService;
 import com.auth.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,9 @@ public class AuthenticateController {
 
     @Autowired
     private JwtUtils jwtUtils;
+    
+    @Autowired
+    private UserService userService;
 
     //generate token
     @PostMapping("/generate-token")
@@ -60,5 +64,15 @@ public class AuthenticateController {
     @GetMapping("/current-user")
     public User getCurrentUser(Principal principal) {
         return ((User) this.userDetailsService.loadUserByUsername(principal.getName()));
+    }
+    
+    @GetMapping("/is-username-unique/{username}")
+    public Boolean checkUsername(@PathVariable("username") String username) {
+        User local = this.userService.getUser(username);
+        if (local == null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
