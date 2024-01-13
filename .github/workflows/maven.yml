@@ -1,0 +1,44 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: CICD
+
+on:
+  push:
+    branches: [deploy-to-ec2]
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Build Project
+        run: mvn clean install -DskipTests
+      - name: Login to docker hub
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: Build docker image
+        run: docker build -t ts-app-auth-service/ts-app-auth-service-0.0.1-SNAPSHOT .
+      - name: Publish image to docker hub
+        run: docker push ts-app-auth-service/ts-app-auth-service-0.0.1-SNAPSHOT:latest
+
+  deploy:
+    needs: build
+    runs-on: [aws-ec2]
+    steps:
+      - name: Pull Image from docker hub
+        run: docker pull ts-app-auth-service/ts-app-auth-service-0.0.1-SNAPSHOT:latest
+      - name: Delete old container
+        run: docker rm -f ts-app-auth-service-0.0.1-SNAPSHOT-container
+      - name: Run docker container
+        run: docker run -d -p 8080:8080 --name ts-app-auth-service-0.0.1-SNAPSHOT-container ts-app-auth-service/ts-app-auth-service-0.0.1-SNAPSHOT
