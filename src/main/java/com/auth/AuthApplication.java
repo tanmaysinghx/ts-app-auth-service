@@ -32,8 +32,6 @@ public class AuthApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try {
-
-
             System.out.println("starting code");
             User user = new User();
 
