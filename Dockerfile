@@ -12,3 +12,5 @@ EXPOSE 8080
 
 # Command to run your application
 CMD ["java", "-jar", "ts-app-auth-service-0.0.1-SNAPSHOT.jar"]
+
+#end of docker file
