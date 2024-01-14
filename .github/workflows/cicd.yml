@@ -28,9 +28,9 @@ jobs:
       - name: Login to docker hub
         run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
       - name: Build docker image
-        run: docker build -t ts-app-auth-service/ts-app-auth-service-0.0.1-SNAPSHOT .
+        run: docker build -t ts-app-auth-service/ts-app-auth-service .
       - name: Publish image to docker hub
-        run: docker push ts-app-auth-service/ts-app-auth-service-0.0.1-SNAPSHOT:latest
+        run: docker push ts-app-auth-service/ts-app-auth-service:latest
 
   deploy:
     needs: build
