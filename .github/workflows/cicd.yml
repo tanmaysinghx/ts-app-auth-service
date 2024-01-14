@@ -10,35 +10,43 @@ name: CICD
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   build:
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
+
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '11'
+
       - name: Build Project
         run: mvn clean install -DskipTests
-      - name: Login to docker hub
-        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-      - name: Build docker image
-        run: docker build -t ts-app-auth-service .
-      - name: Publish image to docker hub
+
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: docker build -t tanmaysinghx/ts-app-auth-service:latest .
+
+      - name: Publish image to Docker Hub
         run: docker push tanmaysinghx/ts-app-auth-service:latest
 
   deploy:
     needs: build
-    runs-on: [aws-ec2]
+    runs-on: aws-ec2
     steps:
-      - name: Pull Image from docker hub
+      - name: Pull Image from Docker Hub
         run: docker pull tanmaysinghx/ts-app-auth-service:latest
+
       - name: Delete old container
-        run: docker rm -f ts-app-auth-service-0.0.1-SNAPSHOT-container
-      - name: Run docker container
-        run: docker run -d -p 8080:8080 --name ts-app-auth-service-0.0.1-SNAPSHOT-container ts-app-auth-service/ts-app-auth-service-0.0.1-SNAPSHOT
+        run: docker rm -f ts-app-auth-service-container || true
+
+      - name: Run Docker container
+        run: docker run -d -p 8080:8080 --name ts-app-auth-service-container tanmaysinghx/ts-app-auth-service:latest
