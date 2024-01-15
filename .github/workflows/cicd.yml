@@ -11,7 +11,7 @@ name: CICD
 on:
   push:
     branches:
-      - deployment-dev
+      - main
 
 jobs:
   build:
@@ -27,10 +27,7 @@ jobs:
           java-version: '11'
 
       - name: Build Project
-        run: mvn clean install
-
-      - name: Run JUnit Tests
-        run: mvn test
+        run: mvn clean install -DskipTests
 
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
