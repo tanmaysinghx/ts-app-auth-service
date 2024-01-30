@@ -43,6 +43,44 @@ public class UserController {
         roles.add(userRole);
         return this.userService.createUser(user, roles);
     }
+    
+    @PostMapping("/create-admin-user")
+    public User createAdminUser(@RequestBody User user) throws Exception {
+        user.setProfile("default.png");
+        user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
+
+        Set<UserRole> roles = new HashSet<>();
+
+        Role role = new Role();
+        role.setRoleId(44L);
+        role.setRoleName("ADMIN");
+
+        UserRole userRole = new UserRole();
+        userRole.setUser(user);
+        userRole.setRole(role);
+
+        roles.add(userRole);
+        return this.userService.createUser(user, roles);
+    }
+    
+    @PostMapping("/create-super-user")
+    public User createSuperUser(@RequestBody User user) throws Exception {
+        user.setProfile("default.png");
+        user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
+
+        Set<UserRole> roles = new HashSet<>();
+
+        Role role = new Role();
+        role.setRoleId(46L);
+        role.setRoleName("SUPERUSER");
+
+        UserRole userRole = new UserRole();
+        userRole.setUser(user);
+        userRole.setRole(role);
+
+        roles.add(userRole);
+        return this.userService.createUser(user, roles);
+    }
 
     @GetMapping("/{username}")
     public User getUser(@PathVariable("username") String username) {

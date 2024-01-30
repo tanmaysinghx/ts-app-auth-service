@@ -10,9 +10,9 @@ public class AuthApplication {
 
 
     public static void main(String[] args) {
-    	System.out.println("tes-app-auth-service is running");
         SpringApplication.run(AuthApplication.class, args);
-
+        
+        System.out.println("ts-app-auth-service is running");
     }
 
 
