@@ -11,7 +11,7 @@ name: CICD
 on:
   push:
     branches:
-      - main
+      - Release-0.0.1-2024-ts-auth-DEV
 
 jobs:
   build:
