@@ -40,7 +40,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: aws-ec2
+    runs-on: ec2-user
     steps:
       - name: Pull Image from Docker Hub
         run: sudo docker pull tanmaysinghx/ts-app-auth-service:latest
