@@ -25,12 +25,9 @@ public class User implements UserDetails {
     private boolean enabled = true;
     private String profile;
 
-    //user many roles
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     @JsonIgnore
     private Set<UserRole> userRoles = new HashSet<>();
-
 
     public User() {
 
@@ -97,13 +94,10 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
         Set<Authority> set = new HashSet<>();
         this.userRoles.forEach(userRole -> {
             set.add(new Authority(userRole.getRole().getRoleName()));
         });
-
-
         return set;
     }
 

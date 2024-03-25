@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
 
       - name: Build Project
         run: mvn clean install -DskipTests
@@ -39,14 +39,35 @@ jobs:
         run: docker push tanmaysinghx/ts-app-auth-service:latest
 
   deploy:
-    needs: build
-    runs-on: aws-ec2
+    runs-on: ubuntu-latest
+    
     steps:
-      - name: Pull Image from Docker Hub
-        run: sudo docker pull tanmaysinghx/ts-app-auth-service:latest
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Delete old container
-        run: sudo docker rm -f ts-app-auth-service-container || true
+      - name: Install Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install apt-transport-https ca-certificates curl software-properties-common -y
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+          sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+          sudo apt-get update
+          sudo apt-get install docker-ce -y
+
+      - name: Pull Docker image from Docker Hub
+        run: |
+          docker pull tanmaysinghx/ts-app-auth-service:latest
+
+      - name: Stop and remove existing Docker container
+        run: |
+          docker stop ts-app-auth-service-container || true
+          docker rm ts-app-auth-service-container || true
 
       - name: Run Docker container
-        run: sudo docker run -d -p 8080:8080 --name ts-app-auth-service-container tanmaysinghx/ts-app-auth-service:latest
+        run: |
+          docker run -d -p 8080:8080 --name ts-app-auth-service-container tanmaysinghx/ts-app-auth-service:latest
