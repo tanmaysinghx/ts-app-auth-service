@@ -9,7 +9,6 @@ public class UserRole {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userRoleId;
 
-    //user
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
